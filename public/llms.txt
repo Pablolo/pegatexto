@@ -1,0 +1,28 @@
+# Pegatexto
+
+> Pegatexto (pegatexto.com) es una herramienta web gratuita, en castellano, que convierte texto con formato en texto plano. El usuario pega contenido copiado de Word, Gmail, Google Docs o cualquier página web, y la herramienta elimina automáticamente negritas, colores, tamaños de fuente, enlaces y cualquier otro estilo, dejando solo el texto listo para volver a copiar y pegar donde se necesite.
+
+## Funcionamiento
+
+- Todo el procesamiento ocurre en el navegador del usuario mediante JavaScript. No hay backend ni base de datos, y el texto nunca se envía a ningún servidor ni se almacena.
+- El usuario pega texto en un área de texto (textarea); el evento de pegado se intercepta para insertar solo el contenido en texto plano (`text/plain`), sin el formato original.
+- El texto resultante se puede editar directamente en el área de texto.
+- Un botón permite copiar el texto plano al portapapeles con un solo clic.
+
+## Casos de uso típicos
+
+- Quitar el formato de texto copiado de Microsoft Word antes de pegarlo en un formulario, CMS o editor de código.
+- Limpiar el formato de correos de Gmail o Outlook antes de reenviarlos o pegarlos en otro sitio.
+- Convertir contenido de Google Docs o páginas web a texto plano para publicarlo sin arrastrar estilos no deseados.
+
+## Público
+
+Cualquier persona que necesite pegar texto sin el formato original: redactores, desarrolladores, personas que gestionan contenido web, soporte técnico, etc.
+
+## Idioma
+
+Castellano (es).
+
+## Contacto / atribución
+
+Herramienta creada por 7Bits (https://sietebits.com).

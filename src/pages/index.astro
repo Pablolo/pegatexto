@@ -1,0 +1,225 @@
+---
+import '../styles/global.css';
+
+const siteUrl = 'https://pegatexto.com/';
+const title = 'Pegatexto – Pega texto con formato y cópialo en texto plano';
+const description =
+	'Herramienta gratuita para quitar el formato al copiar y pegar texto de Word, Gmail, Google Docs o cualquier web. Convierte texto con estilo en texto plano al instante, sin enviar nada a ningún servidor.';
+
+const faq = [
+	{
+		question: '¿Qué es el texto plano y por qué querría quitar el formato?',
+		answer:
+			'El texto plano es texto sin ningún estilo: sin negritas, colores, tamaños de fuente ni enlaces ocultos. Cuando copias contenido de un Word, una web o un correo, suele arrastrar ese formato, lo que puede romper el diseño de destino (por ejemplo, un formulario, un CMS o un editor de código). Pegar en texto plano evita ese problema y deja el contenido limpio y consistente.',
+	},
+	{
+		question: '¿Funciona igual en Mac que en Windows?',
+		answer:
+			'Sí. Pegatexto funciona en el navegador, así que el comportamiento es el mismo en Mac, Windows o Linux, y con los atajos habituales de cada sistema (Cmd+V en Mac, Ctrl+V en Windows).',
+	},
+	{
+		question: '¿Se guarda mi texto en algún sitio?',
+		answer:
+			'No. Todo el procesamiento ocurre en tu propio navegador mediante JavaScript. El texto que pegas nunca se envía a ningún servidor ni se almacena en ningún sitio: si cierras o recargas la pestaña, desaparece.',
+	},
+	{
+		question: '¿Funciona pegando desde Word, Gmail o Google Docs?',
+		answer:
+			'Sí. Pegatexto intercepta el pegado antes de que el navegador aplique el formato original, así que funciona igual venga el texto de Word, Gmail, Google Docs, una página web o cualquier otro editor con estilos.',
+	},
+];
+
+const webApplicationSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'WebApplication',
+	name: 'Pegatexto',
+	url: siteUrl,
+	description,
+	applicationCategory: 'UtilitiesApplication',
+	operatingSystem: 'Any',
+	inLanguage: 'es',
+	offers: {
+		'@type': 'Offer',
+		price: '0',
+		priceCurrency: 'EUR',
+	},
+};
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faq.map((item) => ({
+		'@type': 'Question',
+		name: item.question,
+		acceptedAnswer: {
+			'@type': 'Answer',
+			text: item.answer,
+		},
+	})),
+};
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="canonical" href={siteUrl} />
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta
+			name="keywords"
+			content="pegar texto sin formato, quitar formato al copiar y pegar, convertir texto a texto plano online, pegar sin formato"
+		/>
+
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={siteUrl} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={`${siteUrl}og-image.png`} />
+		<meta property="og:locale" content="es_ES" />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={`${siteUrl}og-image.png`} />
+
+		<script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+		<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+	</head>
+	<body class="min-h-screen bg-stone-50 text-stone-900 antialiased">
+		<div class="flex min-h-screen flex-col">
+			<header class="px-4 pt-10 pb-6 text-center sm:pt-14">
+				<h1 class="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+					Pega Texto
+				</h1>
+				<p class="mx-auto mt-3 max-w-md text-balance text-stone-600">
+					¡Bienvenido! Pega texto con formato y <span class="bg-yellow-300/70 px-0.5"
+						>conviértelo al instante en texto plano</span
+					>, listo para volver a pegar donde lo necesites.
+				</p>
+			</header>
+
+			<main class="flex flex-1 flex-col items-center px-4 pb-16">
+				<div class="w-full max-w-3xl">
+					<label for="editor" class="sr-only">Área de texto</label>
+					<textarea
+						id="editor"
+						class="h-80 w-full resize-y rounded-lg border border-stone-300 bg-white p-4 font-mono text-sm text-stone-800 shadow-sm outline-none placeholder:text-stone-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30 sm:h-80"
+						placeholder="Pega aquí tu texto (Ctrl+V o Cmd+V)…"
+						spellcheck="false"
+						autocomplete="off"
+						autocorrect="off"
+						autocapitalize="off"
+					></textarea>
+
+					<div class="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+						<button
+							id="copy-btn"
+							type="button"
+							class="w-full cursor-pointer rounded-lg bg-teal-600 px-5 py-3 font-medium text-white transition-[transform,background-color] hover:-translate-y-0.5 active:translate-y-0 sm:w-auto"
+						>
+							Copiar texto plano al portapapeles
+						</button>
+						<p class="text-center text-xs text-stone-500 sm:text-right">
+							Todo ocurre en tu navegador: el texto no se guarda ni se envía a ningún servidor.
+						</p>
+					</div>
+				</div>
+
+				<section class="mx-auto mt-16 w-full max-w-2xl" aria-labelledby="faq-title">
+					<h2 id="faq-title" class="text-xl font-semibold text-stone-900">Preguntas frecuentes</h2>
+					<div class="mt-6 space-y-6">
+						{
+							faq.map((item) => (
+								<div>
+									<h3 class="font-medium text-stone-900">{item.question}</h3>
+									<p class="mt-1 text-sm leading-relaxed text-stone-600">{item.answer}</p>
+								</div>
+							))
+						}
+					</div>
+				</section>
+			</main>
+
+			<footer class="border-t border-stone-200 px-4 py-6 text-center text-xs text-stone-500">
+				Hecho por{' '}
+				<a
+					href="https://sietebits.com"
+					class="font-medium text-stone-700 underline decoration-stone-300 underline-offset-2 hover:text-teal-600"
+					rel="noopener"
+				>
+					7Bits
+				</a>
+			</footer>
+		</div>
+
+		<script>
+			const textarea = document.getElementById('editor') as HTMLTextAreaElement;
+			const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+			const copyBtnDefaultText = copyBtn.textContent ?? '';
+			copyBtn.style.minWidth = `${copyBtn.getBoundingClientRect().width}px`;
+			let copyResetTimeout: number | undefined;
+
+			textarea.addEventListener('paste', (event: ClipboardEvent) => {
+				const clipboardData = event.clipboardData;
+				if (!clipboardData) return;
+
+				event.preventDefault();
+
+				const pastedText = clipboardData.getData('text/plain');
+				const start = textarea.selectionStart;
+				const end = textarea.selectionEnd;
+				const value = textarea.value;
+
+				textarea.value = value.slice(0, start) + pastedText + value.slice(end);
+
+				const cursorPosition = start + pastedText.length;
+				textarea.selectionStart = cursorPosition;
+				textarea.selectionEnd = cursorPosition;
+
+				textarea.dispatchEvent(new Event('input', { bubbles: true }));
+			});
+
+			function showCopied() {
+				window.clearTimeout(copyResetTimeout);
+				copyBtn.textContent = '¡Copiado!';
+				copyBtn.classList.remove('bg-teal-600');
+				copyBtn.classList.add('bg-emerald-600');
+				copyResetTimeout = window.setTimeout(() => {
+					copyBtn.textContent = copyBtnDefaultText;
+					copyBtn.classList.remove('bg-emerald-600');
+					copyBtn.classList.add('bg-teal-600');
+				}, 1000);
+			}
+
+			async function copyPlainText() {
+				const text = textarea.value;
+
+				if (navigator.clipboard && window.isSecureContext) {
+					try {
+						await navigator.clipboard.writeText(text);
+						showCopied();
+						return;
+					} catch {
+						// Sigue con el método alternativo.
+					}
+				}
+
+				try {
+					textarea.focus();
+					textarea.select();
+					const successful = document.execCommand('copy');
+					if (successful) {
+						showCopied();
+					}
+				} catch {
+					// Fallo silencioso: no hay forma de copiar disponible.
+				}
+			}
+
+			copyBtn.addEventListener('click', copyPlainText);
+		</script>
+	</body>
+</html>
