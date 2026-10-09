@@ -1,0 +1,87 @@
+---
+import '../styles/global.css';
+import { guides } from '../data/guides';
+
+interface Props {
+	title: string;
+	description: string;
+	schemas?: object[];
+	/** Para páginas que no deben indexarse (p. ej. 404). */
+	noindex?: boolean;
+}
+
+const { title, description, schemas = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/og-image.png', Astro.site).href;
+const isHome = Astro.url.pathname === '/';
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Pegatexto" />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:locale" content="es_ES" />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+
+		{schemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+	</head>
+	<body class="min-h-screen bg-stone-50 text-stone-900 antialiased">
+		<div class="flex min-h-screen flex-col">
+			{
+				!isHome && (
+					<nav class="px-4 pt-6 text-center" aria-label="Inicio">
+						<a
+							href="/"
+							class="inline-flex items-center gap-2 text-sm font-medium text-stone-600 transition-colors hover:text-teal-600"
+						>
+							<img src="/favicon.svg" alt="" width="20" height="20" />
+							Pegatexto
+						</a>
+					</nav>
+				)
+			}
+
+			<slot />
+
+			<footer class="border-t border-stone-200 px-4 py-6 text-center text-xs text-stone-500">
+				<nav aria-label="Guías" class="mx-auto mb-3 flex max-w-2xl flex-wrap justify-center gap-x-4 gap-y-1">
+					{
+						guides.map((guide) => (
+							<a
+								href={`/${guide.slug}/`}
+								class="transition-colors hover:text-teal-600"
+								aria-current={Astro.url.pathname === `/${guide.slug}/` ? 'page' : undefined}
+							>
+								{guide.navLabel}
+							</a>
+						))
+					}
+				</nav>
+				Hecho por{' '}
+				<a
+					href="https://sietebits.com"
+					class="font-medium text-stone-700 underline decoration-stone-300 underline-offset-2 hover:text-teal-600"
+					rel="noopener"
+				>
+					7Bits
+				</a>
+			</footer>
+		</div>
+	</body>
+</html>

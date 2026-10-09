@@ -8,6 +8,18 @@
 - El usuario pega texto en un área de texto (textarea); el evento de pegado se intercepta para insertar solo el contenido en texto plano (`text/plain`), sin el formato original.
 - El texto resultante se puede editar directamente en el área de texto.
 - Un botón permite copiar el texto plano al portapapeles con un solo clic.
+- Herramientas extra para limpiar el texto: quitar saltos de línea (respetando los párrafos), quitar espacios extra y cambiar a mayúsculas, minúsculas o tipo oración. Se aplican a la selección o a todo el texto y se pueden deshacer con Ctrl+Z.
+- Contador de palabras y caracteres en tiempo real.
+
+## Guías
+
+- [Cómo pegar sin formato en Word](https://pegatexto.com/pegar-sin-formato-word/)
+- [Cómo pegar sin formato en Mac](https://pegatexto.com/pegar-sin-formato-mac/)
+- [Cómo pegar sin formato en Windows](https://pegatexto.com/pegar-sin-formato-windows/)
+- [Cómo pegar sin formato en Google Docs](https://pegatexto.com/pegar-sin-formato-google-docs/)
+- [Cómo quitar el formato en Gmail](https://pegatexto.com/quitar-formato-gmail/)
+- [Cómo pegar sin formato en Outlook](https://pegatexto.com/pegar-sin-formato-outlook/)
+- [Quitar saltos de línea de un texto](https://pegatexto.com/quitar-saltos-de-linea/)
 
 ## Casos de uso típicos
 

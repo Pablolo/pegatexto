@@ -1,1 +1,30 @@
 @import "tailwindcss";
+
+@layer components {
+	kbd {
+		@apply inline-block rounded border border-b-2 border-stone-300 bg-white px-1.5 py-px font-sans text-[0.8em] font-medium whitespace-nowrap text-stone-700;
+	}
+
+	/* Contenido de texto de las guías */
+	.guide h2 {
+		@apply text-xl font-semibold text-stone-900;
+	}
+	.guide section + section {
+		@apply mt-10;
+	}
+	.guide :is(p, ol, ul) {
+		@apply mt-3 text-sm leading-relaxed text-stone-600;
+	}
+	.guide ol {
+		@apply list-decimal space-y-1.5 pl-5;
+	}
+	.guide ul {
+		@apply list-disc space-y-1.5 pl-5;
+	}
+	.guide strong {
+		@apply font-medium text-stone-800;
+	}
+	.guide a {
+		@apply font-medium text-stone-700 underline decoration-stone-300 underline-offset-2 hover:text-teal-600;
+	}
+}

@@ -1,0 +1,189 @@
+---
+const actions = [
+	{ id: 'line-breaks', label: 'Quitar saltos de línea', title: 'Une las líneas de cada párrafo y mantiene la separación entre párrafos' },
+	{ id: 'spaces', label: 'Quitar espacios extra', title: 'Elimina espacios dobles, espacios al principio y final de línea y líneas vacías sobrantes' },
+	{ id: 'upper', label: 'MAYÚSCULAS', title: 'Convierte todo a mayúsculas' },
+	{ id: 'lower', label: 'minúsculas', title: 'Convierte todo a minúsculas' },
+	{ id: 'sentence', label: 'Tipo oración', title: 'Mayúscula solo al principio de cada frase' },
+];
+---
+
+<div class="w-full max-w-3xl">
+	<div
+		class="overflow-hidden rounded-lg border border-stone-300 bg-white shadow-sm focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-500/30"
+	>
+		<label for="editor" class="sr-only">Área de texto</label>
+		<textarea
+			id="editor"
+			class="block h-80 w-full resize-y bg-transparent p-4 font-mono text-sm text-stone-800 outline-none placeholder:text-stone-400"
+			placeholder="Pega aquí tu texto (Ctrl+V o Cmd+V)…"
+			spellcheck="false"
+			autocomplete="off"
+			autocorrect="off"
+			autocapitalize="off"></textarea>
+
+		<div class="flex flex-wrap items-center gap-x-1 gap-y-1 border-t border-stone-200 bg-stone-50/60 px-2 py-1.5">
+			<div class="flex flex-wrap items-center gap-1 sm:min-w-0 sm:flex-1" role="toolbar" aria-label="Transformar texto" aria-controls="editor">
+				{
+					actions.map((action, index) => (
+						<>
+							{index === 2 && <span class="mx-1 hidden h-4 w-px bg-stone-200 sm:block" aria-hidden="true" />}
+							<button
+								type="button"
+								data-action={action.id}
+								title={action.title}
+								disabled
+								class="cursor-pointer rounded-md px-1.5 py-1 text-xs font-medium text-stone-600 transition-colors hover:bg-stone-200/60 hover:text-stone-900 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-stone-600"
+							>
+								{action.label}
+							</button>
+						</>
+					))
+				}
+			</div>
+			<p id="counter" class="ml-auto px-1.5 py-1 text-xs whitespace-nowrap text-stone-500 tabular-nums">0 palabras · 0 caracteres</p>
+		</div>
+	</div>
+
+	<div class="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+		<button
+			id="copy-btn"
+			type="button"
+			class="w-full shrink-0 cursor-pointer rounded-lg bg-teal-600 px-5 py-3 font-medium text-white transition-[transform,background-color] hover:-translate-y-0.5 active:translate-y-0 sm:w-auto"
+		>
+			Copiar texto plano al portapapeles
+		</button>
+		<p class="text-center text-xs text-stone-500 sm:text-right">
+			Todo ocurre en tu navegador: el texto no se guarda ni se envía a ningún servidor.
+		</p>
+	</div>
+</div>
+
+<script>
+	const textarea = document.getElementById('editor') as HTMLTextAreaElement;
+	const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+	const counter = document.getElementById('counter') as HTMLParagraphElement;
+	const actionButtons = document.querySelectorAll<HTMLButtonElement>('[data-action]');
+	const copyBtnDefaultText = copyBtn.textContent ?? '';
+	copyBtn.style.minWidth = `${copyBtn.getBoundingClientRect().width}px`;
+	let copyResetTimeout: number | undefined;
+
+	const transforms: Record<string, (text: string) => string> = {
+		'line-breaks': (text) =>
+			text
+				.replace(/\r\n?/g, '\n')
+				.split(/\n[ \t]*\n\s*/)
+				.map((paragraph) => paragraph.replace(/[ \t]*\n[ \t]*/g, ' '))
+				.join('\n\n'),
+		spaces: (text) =>
+			text
+				.replace(/[​-‍﻿]/g, '')
+				.replace(/ /g, ' ')
+				.replace(/ {2,}/g, ' ')
+				.replace(/^ +| +$/gm, '')
+				.replace(/\n{3,}/g, '\n\n')
+				.trim(),
+		upper: (text) => text.toLocaleUpperCase('es'),
+		lower: (text) => text.toLocaleLowerCase('es'),
+		sentence: (text) =>
+			text
+				.toLocaleLowerCase('es')
+				.replace(
+					/(^|[.!?…]\s+|\n\s*)([¡¿"«“(\-–—]*\s*)(\p{L})/gu,
+					(_, before, opening, letter) => before + opening + letter.toLocaleUpperCase('es'),
+				),
+	};
+
+	// Reemplaza un rango del texto conservando, si se puede, el historial de deshacer (Ctrl+Z).
+	function replaceRange(start: number, end: number, text: string) {
+		if (document.activeElement === textarea) {
+			textarea.setSelectionRange(start, end);
+			if (document.execCommand('insertText', false, text)) return;
+		}
+		textarea.setRangeText(text, start, end, 'end');
+		textarea.dispatchEvent(new Event('input', { bubbles: true }));
+	}
+
+	function updateState() {
+		const text = textarea.value;
+		const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+		const characters = [...text].length;
+		counter.textContent =
+			`${words.toLocaleString('es')} ${words === 1 ? 'palabra' : 'palabras'} · ` +
+			`${characters.toLocaleString('es')} ${characters === 1 ? 'carácter' : 'caracteres'}`;
+		actionButtons.forEach((button) => (button.disabled = text.length === 0));
+	}
+
+	textarea.addEventListener('input', updateState);
+
+	textarea.addEventListener('paste', (event: ClipboardEvent) => {
+		const clipboardData = event.clipboardData;
+		if (!clipboardData) return;
+
+		event.preventDefault();
+
+		const pastedText = clipboardData.getData('text/plain');
+		if (!pastedText) return;
+		replaceRange(textarea.selectionStart, textarea.selectionEnd, pastedText);
+	});
+
+	actionButtons.forEach((button) => {
+		// Evita que el botón robe el foco: así se mantiene la selección y funciona Ctrl+Z.
+		button.addEventListener('mousedown', (event) => event.preventDefault());
+		button.addEventListener('click', () => {
+			const transform = transforms[button.dataset.action ?? ''];
+			if (!transform) return;
+
+			const hasSelection =
+				document.activeElement === textarea && textarea.selectionStart !== textarea.selectionEnd;
+			const start = hasSelection ? textarea.selectionStart : 0;
+			const end = hasSelection ? textarea.selectionEnd : textarea.value.length;
+			const original = textarea.value.slice(start, end);
+			const result = transform(original);
+			if (result === original) return;
+
+			replaceRange(start, end, result);
+			if (hasSelection) textarea.setSelectionRange(start, start + result.length);
+		});
+	});
+
+	function showCopied() {
+		window.clearTimeout(copyResetTimeout);
+		copyBtn.textContent = '¡Copiado!';
+		copyBtn.classList.remove('bg-teal-600');
+		copyBtn.classList.add('bg-emerald-600');
+		copyResetTimeout = window.setTimeout(() => {
+			copyBtn.textContent = copyBtnDefaultText;
+			copyBtn.classList.remove('bg-emerald-600');
+			copyBtn.classList.add('bg-teal-600');
+		}, 1000);
+	}
+
+	async function copyPlainText() {
+		const text = textarea.value;
+
+		if (navigator.clipboard && window.isSecureContext) {
+			try {
+				await navigator.clipboard.writeText(text);
+				showCopied();
+				return;
+			} catch {
+				// Sigue con el método alternativo.
+			}
+		}
+
+		try {
+			textarea.focus();
+			textarea.select();
+			const successful = document.execCommand('copy');
+			if (successful) {
+				showCopied();
+			}
+		} catch {
+			// Fallo silencioso: no hay forma de copiar disponible.
+		}
+	}
+
+	copyBtn.addEventListener('click', copyPlainText);
+	updateState();
+</script>

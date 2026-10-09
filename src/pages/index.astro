@@ -1,12 +1,23 @@
 ---
-import '../styles/global.css';
+import Base from '../layouts/Base.astro';
+import Tool from '../components/Tool.astro';
+import Faq from '../components/Faq.astro';
+import GuideLinks from '../components/GuideLinks.astro';
+import { k, type FaqItem } from '../data/guides';
 
-const siteUrl = 'https://pegatexto.com/';
-const title = 'Pega texto con formato y cópialo en texto plano';
+const siteUrl = new URL('/', Astro.site).href;
+const title = 'Pegar sin formato online: convierte a texto plano | Pegatexto';
 const description =
-	'Herramienta gratuita para quitar el formato al pegar texto de Word, Gmail o cualquier web. Convierte a texto plano al instante.';
+	'Quita el formato al texto copiado de Word, Gmail o cualquier web y conviértelo en texto plano al instante. Quita saltos de línea y cuenta palabras. Gratis.';
 
-const faq = [
+const shortcuts = [
+	{ name: 'Navegadores y webs', detail: 'Chrome, Edge, Firefox, Gmail…', href: '/pegar-sin-formato-windows/', windows: k('Ctrl', 'Mayús', 'V'), mac: k('⌘', '⌥', '⇧', 'V') },
+	{ name: 'Google Docs', href: '/pegar-sin-formato-google-docs/', windows: k('Ctrl', 'Mayús', 'V'), mac: k('⌘', '⇧', 'V') },
+	{ name: 'Word', detail: 'Microsoft 365', href: '/pegar-sin-formato-word/', windows: k('Ctrl', 'Mayús', 'V'), mac: 'Pegado especial' },
+	{ name: 'Apps de Mac', detail: 'Pages, Notas, Mail…', href: '/pegar-sin-formato-mac/', windows: '—', mac: k('⌘', '⌥', '⇧', 'V') },
+];
+
+const faq: FaqItem[] = [
 	{
 		question: '¿Qué es el texto plano y por qué querría quitar el formato?',
 		answer:
@@ -15,7 +26,7 @@ const faq = [
 	{
 		question: '¿Funciona igual en Mac que en Windows?',
 		answer:
-			'Sí. Pegatexto funciona en el navegador, así que el comportamiento es el mismo en Mac, Windows o Linux, y con los atajos habituales de cada sistema (Cmd+V en Mac, Ctrl+V en Windows).',
+			'Sí. Pegatexto funciona en el navegador, así que el comportamiento es el mismo en Mac, Windows o Linux, y con los atajos habituales de cada sistema (Cmd+V en Mac, Ctrl+V en Windows). También funciona en el móvil.',
 	},
 	{
 		question: '¿Se guarda mi texto en algún sitio?',
@@ -27,199 +38,118 @@ const faq = [
 		answer:
 			'Sí. Pegatexto intercepta el pegado antes de que el navegador aplique el formato original, así que funciona igual venga el texto de Word, Gmail, Google Docs, una página web o cualquier otro editor con estilos.',
 	},
+	{
+		question: '¿Se mantienen los saltos de línea, las viñetas y las tabulaciones?',
+		answer:
+			'Sí. Los saltos de línea y las tabulaciones se conservan tal cual. Las viñetas y numeraciones suelen llegar como caracteres de texto (•, 1., 2.…), según el programa del que copies. Si quieres unir las líneas, usa el botón «Quitar saltos de línea».',
+	},
+	{
+		question: '¿Qué hacen los botones de debajo del cuadro de texto?',
+		answer:
+			'Permiten limpiar el texto después de pegarlo: quitar saltos de línea, quitar espacios sobrantes y pasar el texto a mayúsculas, minúsculas o tipo oración. Si seleccionas una parte del texto, solo se aplican a esa parte, y puedes deshacer cualquier cambio con Ctrl+Z (Cmd+Z en Mac). El contador muestra las palabras y caracteres del texto.',
+	},
 ];
 
-const webApplicationSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'WebApplication',
-	name: 'Pegatexto',
-	url: siteUrl,
-	description,
-	applicationCategory: 'UtilitiesApplication',
-	operatingSystem: 'Any',
-	inLanguage: 'es',
-	offers: {
-		'@type': 'Offer',
-		price: '0',
-		priceCurrency: 'EUR',
+const schemas = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'Pegatexto',
+		url: siteUrl,
+		inLanguage: 'es',
 	},
-};
-
-const faqSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'FAQPage',
-	mainEntity: faq.map((item) => ({
-		'@type': 'Question',
-		name: item.question,
-		acceptedAnswer: {
-			'@type': 'Answer',
-			text: item.answer,
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebApplication',
+		name: 'Pegatexto',
+		url: siteUrl,
+		description,
+		applicationCategory: 'UtilitiesApplication',
+		operatingSystem: 'Any',
+		inLanguage: 'es',
+		featureList: [
+			'Pegar texto sin formato',
+			'Quitar saltos de línea',
+			'Quitar espacios extra',
+			'Convertir a mayúsculas, minúsculas o tipo oración',
+			'Contador de palabras y caracteres',
+		],
+		offers: {
+			'@type': 'Offer',
+			price: '0',
+			priceCurrency: 'EUR',
 		},
-	})),
-};
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faq.map((item) => ({
+			'@type': 'Question',
+			name: item.question,
+			acceptedAnswer: { '@type': 'Answer', text: item.answer },
+		})),
+	},
+];
 ---
 
-<html lang="es">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="canonical" href={siteUrl} />
+<Base title={title} description={description} schemas={schemas}>
+	<header class="px-4 pt-10 pb-6 text-center sm:pt-14">
+		<h1 class="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">Pega texto sin formato</h1>
+		<p class="mx-auto mt-3 max-w-md text-balance text-stone-600">
+			¡Bienvenido! Pega texto con formato y <span class="bg-yellow-300/70 px-0.5"
+				>conviértelo al instante en texto plano</span
+			>, listo para volver a pegar donde lo necesites.
+		</p>
+	</header>
 
-		<title>{title}</title>
-		<meta name="description" content={description} />
-		<meta
-			name="keywords"
-			content="pegar texto sin formato, quitar formato al copiar y pegar, convertir texto a texto plano online, pegar sin formato"
-		/>
+	<main class="flex flex-1 flex-col items-center px-4 pb-16">
+		<Tool />
 
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content={siteUrl} />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:image" content={`${siteUrl}og-image.png`} />
-		<meta property="og:locale" content="es_ES" />
-
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content={`${siteUrl}og-image.png`} />
-
-		<script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
-		<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-	</head>
-	<body class="min-h-screen bg-stone-50 text-stone-900 antialiased">
-		<div class="flex min-h-screen flex-col">
-			<header class="px-4 pt-10 pb-6 text-center sm:pt-14">
-				<h1 class="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
-					Pega Texto
-				</h1>
-				<p class="mx-auto mt-3 max-w-md text-balance text-stone-600">
-					¡Bienvenido! Pega texto con formato y <span class="bg-yellow-300/70 px-0.5"
-						>conviértelo al instante en texto plano</span
-					>, listo para volver a pegar donde lo necesites.
-				</p>
-			</header>
-
-			<main class="flex flex-1 flex-col items-center px-4 pb-16">
-				<div class="w-full max-w-3xl">
-					<label for="editor" class="sr-only">Área de texto</label>
-					<textarea
-						id="editor"
-						class="h-80 w-full resize-y rounded-lg border border-stone-300 bg-white p-4 font-mono text-sm text-stone-800 shadow-sm outline-none placeholder:text-stone-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/30 sm:h-80"
-						placeholder="Pega aquí tu texto (Ctrl+V o Cmd+V)…"
-						spellcheck="false"
-						autocomplete="off"
-						autocorrect="off"
-						autocapitalize="off"
-					></textarea>
-
-					<div class="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
-						<button
-							id="copy-btn"
-							type="button"
-							class="w-full cursor-pointer rounded-lg bg-teal-600 px-5 py-3 font-medium text-white transition-[transform,background-color] hover:-translate-y-0.5 active:translate-y-0 sm:w-auto"
-						>
-							Copiar texto plano al portapapeles
-						</button>
-						<p class="text-center text-xs text-stone-500 sm:text-right">
-							Todo ocurre en tu navegador: el texto no se guarda ni se envía a ningún servidor.
-						</p>
-					</div>
-				</div>
-
-				<section class="mx-auto mt-16 w-full max-w-2xl" aria-labelledby="faq-title">
-					<h2 id="faq-title" class="text-xl font-semibold text-stone-900">Preguntas frecuentes</h2>
-					<div class="mt-6 space-y-6">
+		<section class="guide mx-auto mt-16 w-full max-w-2xl" aria-labelledby="shortcuts-title">
+			<h2 id="shortcuts-title">Atajos para pegar sin formato</h2>
+			<p>
+				Muchos programas tienen su propio atajo para pegar solo el texto. Si no lo recuerdas o no funciona
+				donde estás, pega el texto aquí arriba y cópialo limpio.
+			</p>
+			<div class="mt-6 overflow-hidden rounded-lg border border-stone-200 bg-white">
+				<table class="w-full text-left text-sm max-sm:block">
+					<thead class="border-b border-stone-200 text-xs text-stone-500 max-sm:hidden">
+						<tr>
+							<th scope="col" class="px-4 py-2 font-medium">Dónde</th>
+							<th scope="col" class="px-2 py-2 font-medium">Windows</th>
+							<th scope="col" class="px-4 py-2 font-medium">Mac</th>
+						</tr>
+					</thead>
+					<tbody class="divide-y divide-stone-200 max-sm:block">
 						{
-							faq.map((item) => (
-								<div>
-									<h3 class="font-medium text-stone-900">{item.question}</h3>
-									<p class="mt-1 text-sm leading-relaxed text-stone-600">{item.answer}</p>
-								</div>
+							shortcuts.map((row) => (
+								<tr class="max-sm:grid max-sm:grid-cols-2">
+									<th scope="row" class="px-4 py-3 align-top font-normal max-sm:col-span-2 max-sm:pb-1">
+										<a href={row.href}>
+											{row.name}
+										</a>
+										{row.detail && <span class="block text-xs text-stone-500">{row.detail}</span>}
+									</th>
+									<td
+										data-label="Windows"
+										class="px-2 py-3 align-top text-stone-600 max-sm:px-4 max-sm:pt-0 max-sm:before:block max-sm:before:text-xs max-sm:before:text-stone-500 max-sm:before:content-[attr(data-label)]"
+										set:html={row.windows}
+									/>
+									<td
+										data-label="Mac"
+										class="px-4 py-3 align-top text-stone-600 max-sm:pt-0 max-sm:before:block max-sm:before:text-xs max-sm:before:text-stone-500 max-sm:before:content-[attr(data-label)]"
+										set:html={row.mac}
+									/>
+								</tr>
 							))
 						}
-					</div>
-				</section>
-			</main>
+					</tbody>
+				</table>
+			</div>
+		</section>
 
-			<footer class="border-t border-stone-200 px-4 py-6 text-center text-xs text-stone-500">
-				Hecho por{' '}
-				<a
-					href="https://sietebits.com"
-					class="font-medium text-stone-700 underline decoration-stone-300 underline-offset-2 hover:text-teal-600"
-					rel="noopener"
-				>
-					7Bits
-				</a>
-			</footer>
-		</div>
+		<GuideLinks title="Guías paso a paso" />
 
-		<script>
-			const textarea = document.getElementById('editor') as HTMLTextAreaElement;
-			const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
-			const copyBtnDefaultText = copyBtn.textContent ?? '';
-			copyBtn.style.minWidth = `${copyBtn.getBoundingClientRect().width}px`;
-			let copyResetTimeout: number | undefined;
-
-			textarea.addEventListener('paste', (event: ClipboardEvent) => {
-				const clipboardData = event.clipboardData;
-				if (!clipboardData) return;
-
-				event.preventDefault();
-
-				const pastedText = clipboardData.getData('text/plain');
-				const start = textarea.selectionStart;
-				const end = textarea.selectionEnd;
-				const value = textarea.value;
-
-				textarea.value = value.slice(0, start) + pastedText + value.slice(end);
-
-				const cursorPosition = start + pastedText.length;
-				textarea.selectionStart = cursorPosition;
-				textarea.selectionEnd = cursorPosition;
-
-				textarea.dispatchEvent(new Event('input', { bubbles: true }));
-			});
-
-			function showCopied() {
-				window.clearTimeout(copyResetTimeout);
-				copyBtn.textContent = '¡Copiado!';
-				copyBtn.classList.remove('bg-teal-600');
-				copyBtn.classList.add('bg-emerald-600');
-				copyResetTimeout = window.setTimeout(() => {
-					copyBtn.textContent = copyBtnDefaultText;
-					copyBtn.classList.remove('bg-emerald-600');
-					copyBtn.classList.add('bg-teal-600');
-				}, 1000);
-			}
-
-			async function copyPlainText() {
-				const text = textarea.value;
-
-				if (navigator.clipboard && window.isSecureContext) {
-					try {
-						await navigator.clipboard.writeText(text);
-						showCopied();
-						return;
-					} catch {
-						// Sigue con el método alternativo.
-					}
-				}
-
-				try {
-					textarea.focus();
-					textarea.select();
-					const successful = document.execCommand('copy');
-					if (successful) {
-						showCopied();
-					}
-				} catch {
-					// Fallo silencioso: no hay forma de copiar disponible.
-				}
-			}
-
-			copyBtn.addEventListener('click', copyPlainText);
-		</script>
-	</body>
-</html>
+		<Faq items={faq} />
+	</main>
+</Base>

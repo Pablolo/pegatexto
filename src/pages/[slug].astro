@@ -1,0 +1,81 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../layouts/Base.astro';
+import Tool from '../components/Tool.astro';
+import Faq from '../components/Faq.astro';
+import GuideLinks from '../components/GuideLinks.astro';
+import { guides, guidesUpdated, publisher, type Guide } from '../data/guides';
+
+export const getStaticPaths = (() =>
+	guides.map((guide) => ({ params: { slug: guide.slug }, props: { guide } }))) satisfies GetStaticPaths;
+
+interface Props {
+	guide: Guide;
+}
+
+const { guide } = Astro.props;
+const pageUrl = new URL(`/${guide.slug}/`, Astro.site).href;
+
+const updatedLabel = new Date(guidesUpdated).toLocaleDateString('es', { month: 'long', year: 'numeric' });
+
+const schemas = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'TechArticle',
+		headline: guide.h1,
+		description: guide.description,
+		url: pageUrl,
+		inLanguage: 'es',
+		dateModified: guidesUpdated,
+		author: publisher,
+		publisher,
+		image: new URL('/og-image.png', Astro.site).href,
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'BreadcrumbList',
+		itemListElement: [
+			{ '@type': 'ListItem', position: 1, name: 'Pegatexto', item: new URL('/', Astro.site).href },
+			{ '@type': 'ListItem', position: 2, name: guide.h1, item: pageUrl },
+		],
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: guide.faq.map((item) => ({
+			'@type': 'Question',
+			name: item.question,
+			acceptedAnswer: { '@type': 'Answer', text: item.answer },
+		})),
+	},
+];
+---
+
+<Base title={guide.title} description={guide.description} schemas={schemas}>
+	<header class="px-4 pt-6 pb-6 text-center sm:pt-8">
+		<h1 class="text-3xl font-bold tracking-tight text-balance text-stone-900 sm:text-4xl">{guide.h1}</h1>
+		<p class="mx-auto mt-3 max-w-lg text-balance text-stone-600" set:html={guide.lead} />
+		<p class="mt-3 text-xs text-stone-500">
+			Actualizado en <time datetime={guidesUpdated}>{updatedLabel}</time>
+		</p>
+	</header>
+
+	<main class="flex flex-1 flex-col items-center px-4 pb-16">
+		<Tool />
+
+		<article class="guide mx-auto mt-16 w-full max-w-2xl">
+			{
+				guide.sections.map((section) => (
+					<section>
+						<h2>{section.heading}</h2>
+						<Fragment set:html={section.html} />
+					</section>
+				))
+			}
+		</article>
+
+		<Faq items={guide.faq} />
+
+		<GuideLinks title="Otras guías" exclude={guide.slug} />
+	</main>
+</Base>

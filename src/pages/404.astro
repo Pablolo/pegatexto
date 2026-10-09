@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import GuideLinks from '../components/GuideLinks.astro';
+---
+
+<Base title="Página no encontrada | Pegatexto" description="Esta página no existe." noindex>
+	<header class="px-4 pt-6 pb-6 text-center sm:pt-8">
+		<h1 class="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">Página no encontrada</h1>
+		<p class="mx-auto mt-3 max-w-md text-balance text-stone-600">
+			Esta página no existe. Vuelve a la <a
+				href="/"
+				class="font-medium text-stone-700 underline decoration-stone-300 underline-offset-2 hover:text-teal-600"
+				>herramienta para pegar texto sin formato</a
+			> o mira alguna de las guías.
+		</p>
+	</header>
+
+	<main class="flex flex-1 flex-col items-center px-4 pb-16">
+		<GuideLinks title="Guías" />
+	</main>
+</Base>

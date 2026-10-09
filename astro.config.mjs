@@ -8,6 +8,11 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://pegatexto.com',
+  trailingSlash: 'always',
+
+  build: {
+    inlineStylesheets: 'always'
+  },
 
   devToolbar: {
     enabled: false
