@@ -1,7 +1,8 @@
 ---
 const actions = [
+	{ id: 'markdown', label: 'Quitar Markdown', title: 'Quita los símbolos de formato (**, ##, -, `…) del texto copiado de ChatGPT, Claude u otras IA' },
 	{ id: 'line-breaks', label: 'Quitar saltos de línea', title: 'Une las líneas de cada párrafo y mantiene la separación entre párrafos' },
-	{ id: 'spaces', label: 'Quitar espacios extra', title: 'Elimina espacios dobles, espacios al principio y final de línea y líneas vacías sobrantes' },
+	{ id: 'spaces', label: 'Quitar espacios extra', title: 'Elimina espacios dobles, espacios y caracteres invisibles, y líneas vacías sobrantes' },
 	{ id: 'upper', label: 'MAYÚSCULAS', title: 'Convierte todo a mayúsculas' },
 	{ id: 'lower', label: 'minúsculas', title: 'Convierte todo a minúsculas' },
 	{ id: 'sentence', label: 'Tipo oración', title: 'Mayúscula solo al principio de cada frase' },
@@ -22,26 +23,28 @@ const actions = [
 			autocorrect="off"
 			autocapitalize="off"></textarea>
 
-		<div class="flex flex-wrap items-center gap-x-1 gap-y-1 border-t border-stone-200 bg-stone-50/60 px-2 py-1.5">
-			<div class="flex flex-wrap items-center gap-1 sm:min-w-0 sm:flex-1" role="toolbar" aria-label="Transformar texto" aria-controls="editor">
-				{
-					actions.map((action, index) => (
-						<>
-							{index === 2 && <span class="mx-1 hidden h-4 w-px bg-stone-200 sm:block" aria-hidden="true" />}
-							<button
-								type="button"
-								data-action={action.id}
-								title={action.title}
-								disabled
-								class="cursor-pointer rounded-md px-1.5 py-1 text-xs font-medium text-stone-600 transition-colors hover:bg-stone-200/60 hover:text-stone-900 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-stone-600"
-							>
-								{action.label}
-							</button>
-						</>
-					))
-				}
-			</div>
-			<p id="counter" class="ml-auto px-1.5 py-1 text-xs whitespace-nowrap text-stone-500 tabular-nums">0 palabras · 0 caracteres</p>
+		<div
+			class="flex flex-wrap items-center gap-1 border-t border-stone-200 bg-stone-50/60 px-2 py-1.5"
+			role="toolbar"
+			aria-label="Transformar texto"
+			aria-controls="editor"
+		>
+			{
+				actions.map((action, index) => (
+					<>
+						{index === 3 && <span class="mx-1 hidden h-4 w-px bg-stone-200 sm:block" aria-hidden="true" />}
+						<button
+							type="button"
+							data-action={action.id}
+							title={action.title}
+							disabled
+							class="cursor-pointer rounded-md px-1.5 py-1 text-xs font-medium text-stone-600 transition-colors hover:bg-stone-200/60 hover:text-stone-900 disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-stone-600"
+						>
+							{action.label}
+						</button>
+					</>
+				))
+			}
 		</div>
 	</div>
 
@@ -53,9 +56,10 @@ const actions = [
 		>
 			Copiar texto plano al portapapeles
 		</button>
-		<p class="text-center text-xs text-stone-500 sm:text-right">
-			Todo ocurre en tu navegador: el texto no se guarda ni se envía a ningún servidor.
-		</p>
+		<div class="text-center text-xs text-stone-500 sm:text-right">
+			<p id="counter" class="font-medium text-stone-600 tabular-nums">0 palabras · 0 caracteres</p>
+			<p class="mt-1">Todo ocurre en tu navegador: el texto no se guarda ni se envía a ningún servidor.</p>
+		</div>
 	</div>
 </div>
 
@@ -77,10 +81,21 @@ const actions = [
 				.join('\n\n'),
 		spaces: (text) =>
 			text
-				.replace(/[​-‍﻿]/g, '')
-				.replace(/ /g, ' ')
+				// Caracteres invisibles: espacios de ancho cero, unión de palabras, BOM y guion opcional.
+				.replace(/[\u200B-\u200D\u2060\uFEFF\u00AD]/g, '')
+				// Espacios especiales (duro, estrecho, fino, ideográfico…) → espacio normal.
+				.replace(/[\u00A0\u1680\u2000-\u200A\u202F\u205F\u3000]/g, ' ')
 				.replace(/ {2,}/g, ' ')
 				.replace(/^ +| +$/gm, '')
+				.replace(/\n{3,}/g, '\n\n')
+				.trim(),
+		markdown: (text) =>
+			text
+				.replace(/\r\n?/g, '\n')
+				// Los bloques de código se dejan tal cual, solo se quitan las vallas ```.
+				.split(/^[ \t]*```.*$/m)
+				.map((part, index) => (index % 2 === 1 ? part.replace(/^\n|\n$/g, '') : stripMarkdown(part)))
+				.join('')
 				.replace(/\n{3,}/g, '\n\n')
 				.trim(),
 		upper: (text) => text.toLocaleUpperCase('es'),
@@ -93,6 +108,32 @@ const actions = [
 					(_, before, opening, letter) => before + opening + letter.toLocaleUpperCase('es'),
 				),
 	};
+
+	function stripMarkdown(text: string) {
+		return (
+			text
+				// Tablas: se quita la fila separadora y las celdas pasan a ir separadas por tabulaciones.
+				.replace(/^[ \t]*\|?[ \t]*:?-{3,}:?[ \t]*(\|[ \t]*:?-{3,}:?[ \t]*)*\|?[ \t]*$\n?/gm, '')
+				.replace(/^[ \t]*\|(.*)\|[ \t]*$/gm, (_, cells: string) =>
+					cells
+						.split('|')
+						.map((cell) => cell.trim())
+						.join('\t'),
+				)
+				.replace(/^[ \t]{0,3}#{1,6}[ \t]+(.*?)[ \t#]*$/gm, '$1')
+				.replace(/^[ \t]*>[ \t]?/gm, '')
+				.replace(/^[ \t]*([-*_])([ \t]*\1){2,}[ \t]*$/gm, '')
+				.replace(/^([ \t]*)[-*+][ \t]+(\[[ xX]\][ \t]+)?/gm, '$1• ')
+				.replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+				.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+				.replace(/(\*\*|__)(?=\S)([\s\S]*?\S)\1/g, '$2')
+				.replace(/(^|[^\w*])\*(?=\S)([^*\n]*?\S)\*(?![\w*])/g, '$1$2')
+				.replace(/(^|[^\w])_(?=\S)([^_\n]*?\S)_(?!\w)/g, '$1$2')
+				.replace(/~~(?=\S)([^~\n]*?\S)~~/g, '$1')
+				.replace(/`([^`\n]+)`/g, '$1')
+				.replace(/\\([\\`*_{}\[\]()#+\-.!|>~])/g, '$1')
+		);
+	}
 
 	// Reemplaza un rango del texto conservando, si se puede, el historial de deshacer (Ctrl+Z).
 	function replaceRange(start: number, end: number, text: string) {

@@ -46,7 +46,7 @@ const faq: FaqItem[] = [
 	{
 		question: '¿Qué hacen los botones de debajo del cuadro de texto?',
 		answer:
-			'Permiten limpiar el texto después de pegarlo: quitar saltos de línea, quitar espacios sobrantes y pasar el texto a mayúsculas, minúsculas o tipo oración. Si seleccionas una parte del texto, solo se aplican a esa parte, y puedes deshacer cualquier cambio con Ctrl+Z (Cmd+Z en Mac). El contador muestra las palabras y caracteres del texto.',
+			'Permiten limpiar el texto después de pegarlo: quitar los símbolos de Markdown (los asteriscos y almohadillas del texto de ChatGPT y otras IA), quitar saltos de línea, quitar espacios sobrantes y caracteres invisibles, y pasar el texto a mayúsculas, minúsculas o tipo oración. Si seleccionas una parte del texto, solo se aplican a esa parte, y puedes deshacer cualquier cambio con Ctrl+Z (Cmd+Z en Mac). El contador muestra las palabras y caracteres del texto.',
 	},
 ];
 
@@ -69,6 +69,7 @@ const schemas = [
 		inLanguage: 'es',
 		featureList: [
 			'Pegar texto sin formato',
+			'Quitar Markdown del texto de ChatGPT y otras IA',
 			'Quitar saltos de línea',
 			'Quitar espacios extra',
 			'Convertir a mayúsculas, minúsculas o tipo oración',

@@ -296,6 +296,69 @@ ${toolTip}`,
 		],
 	},
 	{
+		slug: 'quitar-formato-chatgpt',
+		navLabel: 'ChatGPT e IA',
+		summary: 'Quita los asteriscos, almohadillas y caracteres invisibles del texto de ChatGPT, Claude o Gemini.',
+		title: 'Quitar formato de ChatGPT: asteriscos, ## y más | Pegatexto',
+		description:
+			'Copia texto de ChatGPT, Claude o Gemini sin asteriscos, almohadillas ni caracteres invisibles. Pégalo, pulsa «Quitar Markdown» y cópialo limpio.',
+		h1: 'Quitar el formato del texto de ChatGPT',
+		lead: 'Pega el texto de ChatGPT, Claude o Gemini y pulsa <strong>Quitar Markdown</strong>: desaparecen los asteriscos, las almohadillas y el resto de símbolos de formato.',
+		sections: [
+			{
+				heading: '¿Por qué el texto de ChatGPT sale con asteriscos y almohadillas?',
+				html: `<p>ChatGPT, Claude, Gemini y la mayoría de asistentes de IA escriben sus respuestas en <strong>Markdown</strong>, un formato que usa símbolos para marcar el estilo: <code>**negrita**</code>, <code>## título</code>, <code>- viñeta</code>.</p>
+<p>Al copiar la respuesta, según el botón que uses y dónde la pegues, el texto llega con formato (fuentes, tamaños, títulos) o con los símbolos de Markdown a la vista. Lo segundo pasa sobre todo al pegar en formularios, CMS, editores de código o al pegar sin formato con ${k('Ctrl', 'Mayús', 'V')}.</p>`,
+			},
+			{
+				heading: 'Cómo quitar el formato de ChatGPT, Claude o Gemini',
+				html: `<ol>
+<li>Copia la respuesta de la IA (con su botón de copiar o seleccionándola).</li>
+<li>Pégala en el cuadro de arriba: el formato visual desaparece al pegar.</li>
+<li>Pulsa <strong>Quitar Markdown</strong> para eliminar asteriscos, almohadillas y demás símbolos.</li>
+<li>Pulsa <strong>Quitar espacios extra</strong> para limpiar espacios dobles y caracteres invisibles.</li>
+<li>Copia el resultado con <strong>Copiar texto plano</strong> y pégalo donde quieras.</li>
+</ol>
+<p>Si algo no queda como esperabas, ${k('Ctrl', 'Z')} (${k('⌘ Cmd', 'Z')} en Mac) deshace el último cambio.</p>`,
+			},
+			{
+				heading: 'Qué hace el botón «Quitar Markdown»',
+				html: `<ul>
+<li><strong>Negritas, cursivas y tachados</strong>: quita los asteriscos, guiones bajos y virgulillas, y deja la palabra.</li>
+<li><strong>Títulos</strong>: quita las almohadillas (<code>#</code>, <code>##</code>…) del principio de la línea.</li>
+<li><strong>Listas</strong>: cambia los guiones y asteriscos de las viñetas por puntos (•). Las listas numeradas se quedan igual.</li>
+<li><strong>Enlaces e imágenes</strong>: deja solo el texto del enlace, sin la dirección entre paréntesis.</li>
+<li><strong>Código</strong>: quita las comillas invertidas y respeta el contenido de los bloques de código.</li>
+<li><strong>Tablas</strong>: quita las barras y separa las columnas con tabulaciones, así que puedes pegarlas directamente en Excel o Google Sheets.</li>
+<li><strong>Citas y separadores</strong>: quita los <code>&gt;</code> del principio de línea y las líneas <code>---</code>.</li>
+</ul>`,
+			},
+			{
+				heading: 'Caracteres invisibles en el texto de la IA',
+				html: `<p>A veces el texto generado por IA incluye caracteres que no se ven: espacios especiales (como el espacio estrecho o el espacio duro) o caracteres de ancho cero. Pueden provocar saltos de línea raros, fallos al buscar palabras o problemas al pegar en formularios.</p>
+<p>El botón <strong>Quitar espacios extra</strong> los elimina o los convierte en espacios normales.</p>
+${toolTip}`,
+			},
+		],
+		faq: [
+			{
+				question: '¿Los caracteres invisibles son una marca de agua de la IA?',
+				answer:
+					'No conviene tomarlos así. Son caracteres tipográficos que también aparecen en textos escritos por personas, y no sirven para saber de forma fiable si un texto lo ha escrito una IA. Quitarlos deja el texto más limpio, pero no cambia su origen.',
+			},
+			{
+				question: '¿Funciona con Claude, Gemini, Copilot y otras IA?',
+				answer:
+					'Sí. Casi todos los asistentes de IA usan Markdown para dar formato a sus respuestas, así que el botón «Quitar Markdown» funciona igual con ChatGPT, Claude, Gemini, Copilot, Perplexity o DeepSeek.',
+			},
+			{
+				question: '¿Cómo pego una respuesta de ChatGPT en Word manteniendo los títulos y las negritas?',
+				answer:
+					'Copia la respuesta con el botón de copiar de ChatGPT y pégala en Word con Ctrl+V normal: el formato se suele convertir en títulos y negritas de Word. Pegatexto sirve para lo contrario, cuando quieres el texto sin ningún formato.',
+			},
+		],
+	},
+	{
 		slug: 'quitar-saltos-de-linea',
 		navLabel: 'Quitar saltos de línea',
 		summary: 'Une las líneas cortadas de un PDF o un correo sin perder los párrafos.',
@@ -322,7 +385,8 @@ ${toolTip}`,
 			{
 				heading: 'Otras herramientas incluidas',
 				html: `<ul>
-<li><strong>Quitar espacios extra</strong>: elimina espacios dobles, espacios al principio y final de línea y líneas vacías sobrantes.</li>
+<li><strong>Quitar Markdown</strong>: quita asteriscos, almohadillas y demás símbolos del texto copiado de ChatGPT u otras IA.</li>
+<li><strong>Quitar espacios extra</strong>: elimina espacios dobles, espacios al principio y final de línea, caracteres invisibles y líneas vacías sobrantes.</li>
 <li><strong>MAYÚSCULAS</strong>, <strong>minúsculas</strong> y <strong>Tipo oración</strong>: cambian las mayúsculas y minúsculas del texto.</li>
 <li><strong>Contador</strong>: muestra en todo momento cuántas palabras y caracteres tiene el texto.</li>
 </ul>`,

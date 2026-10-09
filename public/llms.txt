@@ -8,7 +8,7 @@
 - El usuario pega texto en un área de texto (textarea); el evento de pegado se intercepta para insertar solo el contenido en texto plano (`text/plain`), sin el formato original.
 - El texto resultante se puede editar directamente en el área de texto.
 - Un botón permite copiar el texto plano al portapapeles con un solo clic.
-- Herramientas extra para limpiar el texto: quitar saltos de línea (respetando los párrafos), quitar espacios extra y cambiar a mayúsculas, minúsculas o tipo oración. Se aplican a la selección o a todo el texto y se pueden deshacer con Ctrl+Z.
+- Herramientas extra para limpiar el texto: quitar Markdown (asteriscos, almohadillas, viñetas, enlaces y tablas del texto copiado de ChatGPT, Claude, Gemini u otras IA), quitar saltos de línea (respetando los párrafos), quitar espacios extra y caracteres invisibles, y cambiar a mayúsculas, minúsculas o tipo oración. Se aplican a la selección o a todo el texto y se pueden deshacer con Ctrl+Z.
 - Contador de palabras y caracteres en tiempo real.
 
 ## Guías
@@ -19,6 +19,7 @@
 - [Cómo pegar sin formato en Google Docs](https://pegatexto.com/pegar-sin-formato-google-docs/)
 - [Cómo quitar el formato en Gmail](https://pegatexto.com/quitar-formato-gmail/)
 - [Cómo pegar sin formato en Outlook](https://pegatexto.com/pegar-sin-formato-outlook/)
+- [Quitar el formato del texto de ChatGPT](https://pegatexto.com/quitar-formato-chatgpt/)
 - [Quitar saltos de línea de un texto](https://pegatexto.com/quitar-saltos-de-linea/)
 
 ## Casos de uso típicos
@@ -26,6 +27,7 @@
 - Quitar el formato de texto copiado de Microsoft Word antes de pegarlo en un formulario, CMS o editor de código.
 - Limpiar el formato de correos de Gmail o Outlook antes de reenviarlos o pegarlos en otro sitio.
 - Convertir contenido de Google Docs o páginas web a texto plano para publicarlo sin arrastrar estilos no deseados.
+- Limpiar respuestas de ChatGPT, Claude, Gemini u otros asistentes de IA: quitar los símbolos de Markdown y los caracteres invisibles antes de pegarlas en otro sitio.
 
 ## Público
 

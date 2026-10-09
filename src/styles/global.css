@@ -24,6 +24,9 @@
 	.guide strong {
 		@apply font-medium text-stone-800;
 	}
+	.guide code {
+		@apply rounded bg-stone-200/60 px-1 py-px font-mono text-[0.85em] text-stone-800;
+	}
 	.guide a {
 		@apply font-medium text-stone-700 underline decoration-stone-300 underline-offset-2 hover:text-teal-600;
 	}
