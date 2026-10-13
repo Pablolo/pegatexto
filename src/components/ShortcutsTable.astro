@@ -1,0 +1,53 @@
+---
+export interface Shortcut {
+	name: string;
+	detail?: string;
+	/** Guía del programa, si existe en el idioma de la página. */
+	href?: string;
+	/** Atajos; admiten HTML (p. ej. el resultado de `k()`). */
+	windows: string;
+	mac: string;
+}
+
+interface Props {
+	rows: Shortcut[];
+	/** Cabecera de la primera columna. */
+	whereLabel: string;
+}
+
+const { rows, whereLabel } = Astro.props;
+---
+
+<div class="mt-6 overflow-hidden rounded-lg border border-stone-200 bg-white">
+	<table class="w-full text-left text-sm max-sm:block">
+		<thead class="border-b border-stone-200 text-xs text-stone-500 max-sm:hidden">
+			<tr>
+				<th scope="col" class="px-4 py-2 font-medium">{whereLabel}</th>
+				<th scope="col" class="px-2 py-2 font-medium">Windows</th>
+				<th scope="col" class="px-4 py-2 font-medium">Mac</th>
+			</tr>
+		</thead>
+		<tbody class="divide-y divide-stone-200 max-sm:block">
+			{
+				rows.map((row) => (
+					<tr class="max-sm:grid max-sm:grid-cols-2">
+						<th scope="row" class="px-4 py-3 align-top font-normal max-sm:col-span-2 max-sm:pb-1">
+							{row.href ? <a href={row.href}>{row.name}</a> : row.name}
+							{row.detail && <span class="block text-xs text-stone-500">{row.detail}</span>}
+						</th>
+						<td
+							data-label="Windows"
+							class="px-2 py-3 align-top text-stone-600 max-sm:px-4 max-sm:pt-0 max-sm:before:block max-sm:before:text-xs max-sm:before:text-stone-500 max-sm:before:content-[attr(data-label)]"
+							set:html={row.windows}
+						/>
+						<td
+							data-label="Mac"
+							class="px-4 py-3 align-top text-stone-600 max-sm:pt-0 max-sm:before:block max-sm:before:text-xs max-sm:before:text-stone-500 max-sm:before:content-[attr(data-label)]"
+							set:html={row.mac}
+						/>
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</div>

@@ -35,7 +35,16 @@ Cualquier persona que necesite pegar texto sin el formato original: redactores, 
 
 ## Idioma
 
-Castellano (es).
+Castellano (es). También hay una versión completa en inglés en https://pegatexto.com/en/, con estas guías:
+
+- [How to paste without formatting in Word](https://pegatexto.com/en/paste-without-formatting-word/)
+- [How to paste without formatting on Mac](https://pegatexto.com/en/paste-without-formatting-mac/)
+- [How to paste without formatting on Windows](https://pegatexto.com/en/paste-without-formatting-windows/)
+- [How to paste without formatting in Google Docs](https://pegatexto.com/en/paste-without-formatting-google-docs/)
+- [How to remove formatting in Gmail](https://pegatexto.com/en/remove-formatting-gmail/)
+- [How to paste without formatting in Outlook](https://pegatexto.com/en/paste-without-formatting-outlook/)
+- [Remove formatting from ChatGPT text](https://pegatexto.com/en/remove-chatgpt-formatting/)
+- [Remove line breaks from text](https://pegatexto.com/en/remove-line-breaks/)
 
 ## Contacto / atribución
 

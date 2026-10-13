@@ -1,0 +1,124 @@
+---
+import Base from '../../layouts/Base.astro';
+import Tool from '../../components/Tool.astro';
+import Faq from '../../components/Faq.astro';
+import GuideLinks from '../../components/GuideLinks.astro';
+import ShortcutsTable, { type Shortcut } from '../../components/ShortcutsTable.astro';
+import { k, type FaqItem } from '../../data/guides';
+import { findGuidePath, homeAlternates } from '../../i18n';
+
+const siteUrl = new URL('/en/', Astro.site).href;
+const title = 'Paste Without Formatting Online: Convert to Plain Text | Pegatexto';
+const description =
+	'Remove formatting from text copied from Word, Gmail or any website and turn it into plain text instantly. Remove line breaks and count words. Free.';
+
+const shortcuts: Shortcut[] = [
+	{ name: 'Browsers and websites', detail: 'Chrome, Edge, Firefox, Gmail…', href: findGuidePath('en', 'windows'), windows: k('Ctrl', 'Shift', 'V'), mac: k('⌘', '⌥', '⇧', 'V') },
+	{ name: 'Google Docs', href: findGuidePath('en', 'google-docs'), windows: k('Ctrl', 'Shift', 'V'), mac: k('⌘', '⇧', 'V') },
+	{ name: 'Word', detail: 'Microsoft 365', href: findGuidePath('en', 'word'), windows: k('Ctrl', 'Shift', 'V'), mac: 'Paste Special' },
+	{ name: 'Mac apps', detail: 'Pages, Notes, Mail…', href: findGuidePath('en', 'mac'), windows: '—', mac: k('⌘', '⌥', '⇧', 'V') },
+];
+
+const faq: FaqItem[] = [
+	{
+		question: 'What is plain text and why would I want to remove formatting?',
+		answer:
+			'Plain text is text without any styling: no bold, colors, font sizes or hidden links. When you copy content from a Word document, a website or an email, it usually carries that formatting with it, which can break the layout wherever you paste it (a form, a CMS or a code editor, for example). Pasting as plain text avoids the problem and keeps your content clean and consistent.',
+	},
+	{
+		question: 'Does it work the same on Mac and Windows?',
+		answer:
+			'Yes. Pegatexto runs in your browser, so it behaves the same on Mac, Windows or Linux, with the usual shortcuts for each system (Cmd+V on Mac, Ctrl+V on Windows). It also works on your phone.',
+	},
+	{
+		question: 'Is my text stored anywhere?',
+		answer:
+			'No. All processing happens in your own browser using JavaScript. The text you paste is never sent to any server or stored anywhere: if you close or reload the tab, it is gone.',
+	},
+	{
+		question: 'Does it work when pasting from Word, Gmail or Google Docs?',
+		answer:
+			'Yes. Pegatexto intercepts the paste before the browser applies the original formatting, so it works the same whether the text comes from Word, Gmail, Google Docs, a web page or any other rich text editor.',
+	},
+	{
+		question: 'Are line breaks, bullet points and tabs kept?',
+		answer:
+			'Yes. Line breaks and tabs are kept as they are. Bullets and numbering usually come through as text characters (•, 1., 2.…), depending on the app you copy from. If you want to join the lines, use the “Remove line breaks” button.',
+	},
+	{
+		question: 'What do the buttons below the text box do?',
+		answer:
+			'They let you clean up the text after pasting it: remove Markdown symbols (the asterisks and hash signs in text from ChatGPT and other AI tools), remove line breaks, remove extra spaces and invisible characters, and convert the text to uppercase, lowercase or sentence case. If you select part of the text, they only apply to that part, and you can undo any change with Ctrl+Z (Cmd+Z on Mac). The counter shows the number of words and characters.',
+	},
+];
+
+const schemas = [
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebSite',
+		name: 'Pegatexto',
+		url: siteUrl,
+		inLanguage: 'en',
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'WebApplication',
+		name: 'Pegatexto',
+		url: siteUrl,
+		description,
+		applicationCategory: 'UtilitiesApplication',
+		operatingSystem: 'Any',
+		inLanguage: 'en',
+		featureList: [
+			'Paste text without formatting',
+			'Remove Markdown from ChatGPT and other AI text',
+			'Remove line breaks',
+			'Remove extra spaces',
+			'Convert to uppercase, lowercase or sentence case',
+			'Word and character counter',
+		],
+		offers: {
+			'@type': 'Offer',
+			price: '0',
+			priceCurrency: 'USD',
+		},
+	},
+	{
+		'@context': 'https://schema.org',
+		'@type': 'FAQPage',
+		mainEntity: faq.map((item) => ({
+			'@type': 'Question',
+			name: item.question,
+			acceptedAnswer: { '@type': 'Answer', text: item.answer },
+		})),
+	},
+];
+---
+
+<Base title={title} description={description} schemas={schemas} alternates={homeAlternates}>
+	<header class="px-4 pt-10 pb-6 text-center sm:pt-14">
+		<h1 class="text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">Paste text without formatting</h1>
+		<p class="mx-auto mt-3 max-w-md text-balance text-stone-600">
+			Welcome! Paste formatted text and <span class="bg-yellow-300/70 px-0.5"
+				>turn it into plain text instantly</span
+			>, ready to paste wherever you need it.
+		</p>
+	</header>
+
+	<main class="flex flex-1 flex-col items-center px-4 pb-16">
+		<Tool />
+
+		<section class="guide mx-auto mt-16 w-full max-w-2xl" aria-labelledby="shortcuts-title">
+			<h2 id="shortcuts-title">Shortcuts to paste without formatting</h2>
+			<p>
+				Many apps have their own shortcut to paste just the text. If you can't remember it or it doesn't work
+				where you are, paste your text in the box above and copy it back clean.
+			</p>
+			<ShortcutsTable rows={shortcuts} whereLabel="Where" />
+		</section>
+
+		<GuideLinks title="Step-by-step guides" />
+
+		<Faq items={faq} />
+	</main>
+</Base>

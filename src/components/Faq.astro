@@ -1,15 +1,17 @@
 ---
 import type { FaqItem } from '../data/guides';
+import { getLang, ui } from '../i18n';
 
 interface Props {
 	items: FaqItem[];
 }
 
 const { items } = Astro.props;
+const t = ui[getLang(Astro.currentLocale)];
 ---
 
 <section class="mx-auto mt-16 w-full max-w-2xl" aria-labelledby="faq-title">
-	<h2 id="faq-title" class="text-xl font-semibold text-stone-900">Preguntas frecuentes</h2>
+	<h2 id="faq-title" class="text-xl font-semibold text-stone-900">{t.faqTitle}</h2>
 	<div class="mt-6 space-y-6">
 		{
 			items.map((item) => (

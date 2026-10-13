@@ -4,6 +4,8 @@ export interface FaqItem {
 }
 
 export interface Guide {
+	/** Identificador común a todas las traducciones de una guía. */
+	key: string;
 	slug: string;
 	/** Texto corto para enlaces de navegación. */
 	navLabel: string;
@@ -36,6 +38,7 @@ const toolTip = `<p>Si el atajo no funciona en tu programa, pega el texto en el 
 
 export const guides: Guide[] = [
 	{
+		key: 'word',
 		slug: 'pegar-sin-formato-word',
 		navLabel: 'Word',
 		summary: 'Atajo, opciones de pegado y cómo hacer que Word pegue siempre sin formato.',
@@ -92,6 +95,7 @@ ${toolTip}`,
 		],
 	},
 	{
+		key: 'mac',
 		slug: 'pegar-sin-formato-mac',
 		navLabel: 'Mac',
 		summary: 'El atajo universal de macOS y qué hacer en TextEdit, Google Docs o Word.',
@@ -138,6 +142,7 @@ ${toolTip}`,
 		],
 	},
 	{
+		key: 'windows',
 		slug: 'pegar-sin-formato-windows',
 		navLabel: 'Windows',
 		summary: 'Ctrl+Mayús+V, PowerToys y cómo pegar sin formato en cualquier programa.',
@@ -176,6 +181,7 @@ ${toolTip}`,
 		],
 	},
 	{
+		key: 'google-docs',
 		slug: 'pegar-sin-formato-google-docs',
 		navLabel: 'Google Docs',
 		summary: 'El atajo para pegar sin formato y cómo borrar el formato de un texto ya pegado.',
@@ -213,6 +219,7 @@ ${toolTip}`,
 		],
 	},
 	{
+		key: 'gmail',
 		slug: 'quitar-formato-gmail',
 		navLabel: 'Gmail',
 		summary: 'Cómo pegar sin formato al redactar y cómo enviar un correo en texto plano.',
@@ -250,6 +257,7 @@ ${toolTip}`,
 		],
 	},
 	{
+		key: 'outlook',
 		slug: 'pegar-sin-formato-outlook',
 		navLabel: 'Outlook',
 		summary: 'Atajos y ajustes para pegar sin formato en Outlook clásico, nuevo y web.',
@@ -296,6 +304,7 @@ ${toolTip}`,
 		],
 	},
 	{
+		key: 'chatgpt',
 		slug: 'quitar-formato-chatgpt',
 		navLabel: 'ChatGPT e IA',
 		summary: 'Quita los asteriscos, almohadillas y caracteres invisibles del texto de ChatGPT, Claude o Gemini.',
@@ -359,6 +368,7 @@ ${toolTip}`,
 		],
 	},
 	{
+		key: 'line-breaks',
 		slug: 'quitar-saltos-de-linea',
 		navLabel: 'Quitar saltos de línea',
 		summary: 'Une las líneas cortadas de un PDF o un correo sin perder los párrafos.',
